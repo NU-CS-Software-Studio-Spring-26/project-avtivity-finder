@@ -2,32 +2,80 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h1 class="mb-0">Activities</h1>
-  <%= link_to "New Activity", new_activity_path, class: "btn btn-primary" %>
+  <div class="d-flex gap-2">
+    <%= link_to "New Activity", new_activity_path, class: "btn btn-primary" %>
+    <button type="button" class="btn btn-danger" id="deleteSelectedBtn" onclick="deleteSelected()" disabled>
+      Delete Selected
+    </button>
+  </div>
 </div>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>City</th>
-      <th>Category</th>
-      <th>Date</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @activities.each do |activity| %>
+<form id="bulkDeleteForm">
+  <table class="table table-striped align-middle">
+    <thead>
       <tr>
-        <td><%= activity.title %></td>
-        <td><%= activity.city %></td>
-        <td><%= activity.category %></td>
-        <td><%= activity.event_date %></td>
-        <td class="d-flex gap-2">
-          <%= link_to "Show", activity, class: "btn btn-sm btn-outline-primary" %>
-          <%= link_to "Edit", edit_activity_path(activity), class: "btn btn-sm btn-outline-secondary" %>
-          <%= button_to "Delete", activity, method: :delete, class: "btn btn-sm btn-outline-danger", form: { data: { turbo_confirm: "Are you sure?" } } %>
-        </td>
+        <th style="width: 40px;">
+          <input type="checkbox" class="form-check-input" id="selectAll" onclick="toggleSelectAll()">
+        </th>
+        <th>Title</th>
+        <th>City</th>
+        <th>Category</th>
+        <th>Date</th>
+        <th>Actions</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @activities.each do |activity| %>
+        <tr>
+          <td>
+            <input type="checkbox" class="form-check-input activity-checkbox"
+                   value="<%= activity.id %>" onclick="updateDeleteBtn()">
+          </td>
+          <td><%= activity.title %></td>
+          <td><%= activity.city %></td>
+          <td><%= activity.category %></td>
+          <td><%= activity.event_date %></td>
+          <td>
+            <div class="d-flex gap-2">
+              <%= link_to "Show", activity, class: "btn btn-sm btn-outline-primary" %>
+              <%= link_to "Edit", edit_activity_path(activity), class: "btn btn-sm btn-outline-secondary" %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</form>
+
+<script>
+  function toggleSelectAll() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.activity-checkbox');
+    checkboxes.forEach(cb => cb.checked = selectAll.checked);
+    updateDeleteBtn();
+  }
+
+  function updateDeleteBtn() {
+    const checked = document.querySelectorAll('.activity-checkbox:checked');
+    const btn = document.getElementById('deleteSelectedBtn');
+    btn.disabled = checked.length === 0;
+    const all = document.querySelectorAll('.activity-checkbox');
+    document.getElementById('selectAll').indeterminate = checked.length > 0 && checked.length < all.length;
+    document.getElementById('selectAll').checked = checked.length === all.length && all.length > 0;
+  }
+
+  function deleteSelected() {
+    const checked = document.querySelectorAll('.activity-checkbox:checked');
+    if (!confirm(`Are you sure you want to delete ${checked.length} activities?`)) return;
+    checked.forEach(cb => {
+      fetch(`/activities/${cb.value}`, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+          'Accept': 'application/json'
+        }
+      });
+    });
+    setTimeout(() => window.location.reload(), 500);
+  }
+</script>
