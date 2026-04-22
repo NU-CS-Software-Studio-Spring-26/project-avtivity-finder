@@ -1,0 +1,19 @@
+<% content_for :title, @activity.title %>
+
+<h1><%= @activity.title %></h1>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <p><strong>Description:</strong> <%= @activity.description.presence || "N/A" %></p>
+    <p><strong>Location:</strong> <%= @activity.location.presence || "N/A" %></p>
+    <p><strong>City:</strong> <%= @activity.city %></p>
+    <p><strong>Category:</strong> <%= @activity.category.presence || "N/A" %></p>
+    <p><strong>Event date:</strong> <%= @activity.event_date %></p>
+  </div>
+</div>
+
+<div class="d-flex gap-2">
+  <%= link_to "Edit Activity", edit_activity_path(@activity), class: "btn btn-secondary" %>
+  <%= link_to "Back to Activities", activities_path, class: "btn btn-outline-primary" %>
+  <%= button_to "Delete Activity", @activity, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Are you sure?" } } %>
+</div>

@@ -1,0 +1,23 @@
+require "test_helper"
+
+class ActivityTest < ActiveSupport::TestCase
+  test "is valid with required fields" do
+    activity = Activity.new(title: "City Walk", city: "Seattle", event_date: Date.today)
+
+    assert activity.valid?
+  end
+
+  test "is invalid without title" do
+    activity = Activity.new(city: "Seattle", event_date: Date.today)
+
+    assert_not activity.valid?
+    assert_includes activity.errors[:title], "can't be blank"
+  end
+
+  test "is invalid without city" do
+    activity = Activity.new(title: "City Walk", event_date: Date.today)
+
+    assert_not activity.valid?
+    assert_includes activity.errors[:city], "can't be blank"
+  end
+end

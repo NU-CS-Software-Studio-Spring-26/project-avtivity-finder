@@ -1,0 +1,10 @@
+<% content_for :title, "Editing activity" %>
+
+<h1>Editing activity</h1>
+
+<%= render "form", activity: @activity %>
+
+<div class="d-flex gap-2 mt-3">
+  <%= link_to "Show Activity", @activity, class: "btn btn-outline-secondary" %>
+  <%= link_to "Back to Activities", activities_path, class: "btn btn-outline-primary" %>
+</div>

@@ -1,0 +1,33 @@
+<% content_for :title, "Activities" %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Activities</h1>
+  <%= link_to "New Activity", new_activity_path, class: "btn btn-primary" %>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>City</th>
+      <th>Category</th>
+      <th>Date</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @activities.each do |activity| %>
+      <tr>
+        <td><%= activity.title %></td>
+        <td><%= activity.city %></td>
+        <td><%= activity.category %></td>
+        <td><%= activity.event_date %></td>
+        <td class="d-flex gap-2">
+          <%= link_to "Show", activity, class: "btn btn-sm btn-outline-primary" %>
+          <%= link_to "Edit", edit_activity_path(activity), class: "btn btn-sm btn-outline-secondary" %>
+          <%= button_to "Delete", activity, method: :delete, class: "btn btn-sm btn-outline-danger", form: { data: { turbo_confirm: "Are you sure?" } } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
