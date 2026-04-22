@@ -93,18 +93,36 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: activity_finder_production
-    username: activity_finder
-    password: <%= ENV["ACTIVITY_FINDER_DATABASE_PASSWORD"] %>
+    url: <%= ENV["DATABASE_URL"] %>
+
   cache:
     <<: *primary_production
     database: activity_finder_production_cache
     migrations_paths: db/cache_migrate
+
   queue:
     <<: *primary_production
     database: activity_finder_production_queue
     migrations_paths: db/queue_migrate
+
   cable:
     <<: *primary_production
     database: activity_finder_production_cable
     migrations_paths: db/cable_migrate
+  # primary: &primary_production
+  #   <<: *default
+  #   database: activity_finder_production
+  #   username: activity_finder
+  #   password: <%= ENV["ACTIVITY_FINDER_DATABASE_PASSWORD"] %>
+  # cache:
+  #   <<: *primary_production
+  #   database: activity_finder_production_cache
+  #   migrations_paths: db/cache_migrate
+  # queue:
+  #   <<: *primary_production
+  #   database: activity_finder_production_queue
+  #   migrations_paths: db/queue_migrate
+  # cable:
+  #   <<: *primary_production
+  #   database: activity_finder_production_cable
+  #   migrations_paths: db/cable_migrate
