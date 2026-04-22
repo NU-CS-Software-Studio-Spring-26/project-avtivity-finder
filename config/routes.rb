@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root "activities#index"
 
-  resources :users, only: [:new, :create, :show, :edit, :update]
+  resources :users, only: [ :new, :create, :show, :edit, :update ]
   resources :activities
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

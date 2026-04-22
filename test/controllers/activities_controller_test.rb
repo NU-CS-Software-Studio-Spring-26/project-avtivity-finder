@@ -3,7 +3,7 @@ require "test_helper"
 class ActivitiesControllerTest < ActionDispatch::IntegrationTest
   setup do
     # @activity = activities(:one)
-    
+
     @user = User.create!(
       name: "Test User",
       email: "test@example.com",
@@ -13,7 +13,7 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
 
     @activity = Activity.create!(
       title: "Running",
-      city: "Seattle", 
+      city: "Seattle",
       event_date: Date.today,
       user: @user
     )

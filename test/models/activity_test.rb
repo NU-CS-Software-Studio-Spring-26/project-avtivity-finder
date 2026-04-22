@@ -9,7 +9,7 @@ class ActivityTest < ActiveSupport::TestCase
       password_confirmation: "password"
     )
   end
-  
+
   test "is valid with required fields" do
     activity = Activity.new(title: "City Walk", city: "Seattle", event_date: Date.today, user: @user)
 

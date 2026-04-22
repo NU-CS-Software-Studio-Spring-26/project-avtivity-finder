@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action :require_login, except: [:new, :create]
-  before_action :authorize_user!, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [ :show, :edit, :update, :destroy ]
+  before_action :require_login, except: [ :new, :create ]
+  before_action :authorize_user!, only: [ :show, :edit, :update, :destroy ]
 
   def authorize_user!
     redirect_to root_path, alert: "Not authorized" unless @user == current_user
@@ -39,7 +39,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     authorize_user!
-    
+
     if @user.update(user_params)
       redirect_to @user, notice: "User updated successfully."
     else
