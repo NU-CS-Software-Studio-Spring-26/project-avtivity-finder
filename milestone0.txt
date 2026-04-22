@@ -5,7 +5,7 @@
 ✅ Uses Bootstrap for frontend (at least table, buttons, form, the more the better)
 ✅ Consistent links between the four views are present, giving a feel of one product rather than disconnected pages
 - Runs on Heroku
-- Commits from all team members on public project Github
+✅ Commits from all team members on public project Github
 ✅ .gitignore file is present and lists project files that should not be tracked
 ✅ Code is covered with basic unit tests (generated with AI assistance, hw2 also has examples) and test run automatically on Github (see hw2 for an example .github/workflows), can be AI generated.
 ✅ Repository contains a readme.md file that formulates MVP, lists names of all team members,  and a link to Heroku deployment. Readme file contains "Communication" section that describes the communication and decision-making rules that the team agrees on for the remainder of the class. 
