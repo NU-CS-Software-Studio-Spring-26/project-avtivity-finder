@@ -39,8 +39,7 @@ Things you may want to cover:
 
 
 # Heroku Deployment
-- Pending
-
+- https://activity-finder-8073ba70e16c.herokuapp.com/activities
 
 
 ## Communication
