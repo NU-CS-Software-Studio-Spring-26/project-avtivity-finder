@@ -8,7 +8,7 @@ class Activity < ApplicationRecord
 
   has_many_attached :images
   validate :image_limit
-  
+
   def ordered_images
     images.attachments.order(:position, :created_at)
   end
@@ -23,5 +23,4 @@ class Activity < ApplicationRecord
       errors.add(:images, "maximum is 10 images")
     end
   end
-
 end

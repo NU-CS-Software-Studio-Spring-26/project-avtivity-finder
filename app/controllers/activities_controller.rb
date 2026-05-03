@@ -71,12 +71,12 @@ class ActivitiesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def activity_params
       params.expect(activity: [
-          :title, 
-          :description, 
-          :location, 
-          :city, 
-          :category, 
-          :event_date ,
+          :title,
+          :description,
+          :location,
+          :city,
+          :category,
+          :event_date
         ])
     end
 
