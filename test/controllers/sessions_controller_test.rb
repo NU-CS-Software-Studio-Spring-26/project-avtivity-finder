@@ -36,6 +36,25 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_match "Invalid email or password", response.body
   end
 
+  test "should not login with unknown email and show generic message" do
+    post login_path, params: {
+      email: "notregistered@example.com",
+      password: "anypassword"
+    }
+
+    assert_response :unprocessable_entity
+    assert_match "Invalid email or password", response.body
+  end
+
+  test "login matches email case-insensitively" do
+    post login_path, params: {
+      email: @user.email.upcase,
+      password: "password"
+    }
+
+    assert_redirected_to root_path
+  end
+
   test "should logout successfully" do
     post login_path, params: {
       email: @user.email,

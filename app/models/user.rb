@@ -1,16 +1,24 @@
 class User < ApplicationRecord
-    has_secure_password
+  has_secure_password
 
-    has_many :activities, dependent: :destroy
+  has_many :activities, dependent: :destroy
 
-    validates :name, presence: true
+  before_validation :normalize_email
 
-    validates :email,
-                presence: true,
-                uniqueness: true,
-                format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :name, presence: true
 
-    validates :password,
-                length: { minimum: 6 },
-                if: -> { password.present? }
+  validates :email,
+            presence: true,
+            uniqueness: true,
+            format: { with: URI::MailTo::EMAIL_REGEXP }
+
+  validates :password,
+            length: { minimum: 6 },
+            if: -> { password.present? }
+
+  private
+
+  def normalize_email
+    self.email = email.to_s.strip.downcase.presence
+  end
 end

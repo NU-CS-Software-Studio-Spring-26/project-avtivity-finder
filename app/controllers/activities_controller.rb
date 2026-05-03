@@ -1,7 +1,7 @@
 class ActivitiesController < ApplicationController
-  before_action :require_login, :set_activity, only: %i[ show edit update destroy ]
-  before_action :set_activity, only: [ :show, :edit, :update, :destroy ]
-  before_action :authorize_activity!, only: [ :edit, :update, :destroy ]
+  before_action :require_login
+  before_action :set_activity, only: %i[ show edit update destroy ]
+  before_action :authorize_activity!, only: %i[ edit update destroy ]
 
   def authorize_activity!
     redirect_to root_path, alert: "Not authorized" unless @activity.user == current_user
