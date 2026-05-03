@@ -11,7 +11,7 @@ class ActivityTest < ActiveSupport::TestCase
   end
 
   test "is valid with required fields" do
-    activity = Activity.new(title: "City Walk", city: "Seattle", event_date: Date.today, user: @user)
+    activity = Activity.new(title: "City Walk", city: "Seattle", category: "Test", event_date: Date.today, user: @user)
 
     assert activity.valid?
   end

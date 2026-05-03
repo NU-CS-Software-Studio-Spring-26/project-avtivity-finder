@@ -1,19 +1,75 @@
 <% content_for :title, @activity.title %>
 
-<h1><%= @activity.title %></h1>
+<div class="activity-detail-page">
+  <div class="activity-hero-card mb-4">
+    <% if @activity.images.attached? %>
+      <div id="activityImagesCarousel" class="carousel slide">
+        <div class="carousel-inner">
+          <% @activity.ordered_images.each_with_index do |image, index| %>
+            <div class="carousel-item <%= "active" if index == 0 %>">
+              <%= image_tag image, class: "activity-carousel-image" %>
+            </div>
+          <% end %>
+        </div>
 
-<div class="card mb-3">
-  <div class="card-body">
-    <p><strong>Description:</strong> <%= @activity.description.presence || "N/A" %></p>
-    <p><strong>Location:</strong> <%= @activity.location.presence || "N/A" %></p>
-    <p><strong>City:</strong> <%= @activity.city %></p>
-    <p><strong>Category:</strong> <%= @activity.category.presence || "N/A" %></p>
-    <p><strong>Event date:</strong> <%= @activity.event_date %></p>
+        <% if @activity.images.count > 1 %>
+          <button class="carousel-control-prev" type="button" data-bs-target="#activityImagesCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+          </button>
+
+          <button class="carousel-control-next" type="button" data-bs-target="#activityImagesCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+          </button>
+        <% end %>
+      </div>
+    <% else %>
+      <%= image_tag "activity_finder_default_thumbnail.jpg", class: "activity-carousel-image" %>
+    <% end %>
   </div>
-</div>
 
-<div class="d-flex gap-2">
-  <%= link_to "Edit Activity", edit_activity_path(@activity), class: "btn btn-secondary" %>
-  <%= link_to "Back to Activities", activities_path, class: "btn btn-outline-primary" %>
-  <%= button_to "Delete Activity", @activity, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Are you sure?" } } %>
+  <div class="activity-detail-content">
+    <main class="activity-main-info">
+      <span class="activity-category-badge"><%= @activity.category %></span>
+      <h1 class="activity-detail-title mt-2"><%= @activity.title %></h1>
+
+      <% if @activity.description.present? %>
+        <section class="activity-section">
+          <h2>About this activity</h2>
+          <%= simple_format(@activity.description) %>
+        </section>
+      <% end %>
+    </main>
+
+    <aside class="activity-detail-sidebar">
+      <div class="activity-info-card">
+        <h2>Details</h2>
+
+        <div class="activity-info-row">
+          <span class="activity-info-label">Date</span>
+          <span class="activity-info-value"><%= @activity.event_date&.strftime("%B %d, %Y") || "N/A" %></span>
+        </div>
+
+        <div class="activity-info-row">
+          <span class="activity-info-label">City</span>
+          <span class="activity-info-value"><%= @activity.city.presence || "N/A" %></span>
+        </div>
+
+        <div class="activity-info-row">
+          <span class="activity-info-label">Location</span>
+          <span class="activity-info-value"><%= @activity.location.presence || "N/A" %></span>
+        </div>
+
+        <div class="activity-info-row">
+          <span class="activity-info-label">Category</span>
+          <span class="activity-info-value"><%= @activity.category.presence || "N/A" %></span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="mt-4 d-flex gap-2">
+    <%= link_to "Edit Activity", edit_activity_path(@activity), class: "btn btn-secondary" %>
+    <%= link_to "Back to Activities", activities_path, class: "btn btn-outline-primary" %>
+    <%= button_to "Delete Activity", @activity, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Are you sure?" } } %>
+  </div>
 </div>

@@ -14,6 +14,7 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
     @activity = Activity.create!(
       title: "Running",
       city: "Seattle",
+      category: "Test",
       event_date: Date.today,
       user: @user
     )
@@ -39,7 +40,7 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
       post activities_url, params: { activity: { category: @activity.category, city: @activity.city, description: @activity.description, event_date: @activity.event_date, location: @activity.location, title: @activity.title } }
     end
 
-    assert_redirected_to activity_url(Activity.last)
+    assert_redirected_to activities_path
   end
 
   test "should show activity" do
@@ -54,7 +55,7 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
 
   test "should update activity" do
     patch activity_url(@activity), params: { activity: { category: @activity.category, city: @activity.city, description: @activity.description, event_date: @activity.event_date, location: @activity.location, title: @activity.title } }
-    assert_redirected_to activity_url(@activity)
+    assert_redirected_to activities_path
   end
 
   test "should destroy activity" do
