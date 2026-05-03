@@ -28,26 +28,27 @@ class ActivitiesController < ApplicationController
 
   # POST /activities or /activities.json
   def create
-    # @activity = Activity.new(activity_params)
     @activity = current_user.activities.build(activity_params)
 
     if @activity.save
-      redirect_to @activity
+      attach_new_images
+      normalize_image_positions
+      redirect_to activities_path, notice: "Activity created successfully."
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /activities/1 or /activities/1.json
   def update
-    respond_to do |format|
-      if @activity.update(activity_params)
-        format.html { redirect_to @activity, notice: "Activity was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @activity }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @activity.errors, status: :unprocessable_entity }
-      end
+    if @activity.update(activity_params)
+      purge_selected_images
+      attach_new_images
+      update_image_order
+      normalize_image_positions
+      redirect_to activities_path, notice: "Activity updated successfully."
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -69,6 +70,43 @@ class ActivitiesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def activity_params
-      params.expect(activity: [ :title, :description, :location, :city, :category, :event_date ])
+      params.expect(activity: [
+          :title,
+          :description,
+          :location,
+          :city,
+          :category,
+          :event_date
+        ])
+    end
+
+    def attach_new_images
+      uploaded_images = params.dig(:activity, :images)
+      return if uploaded_images.blank?
+      remaining_slots = 10 - @activity.images.attachments.count
+      images_to_attach = uploaded_images.first(remaining_slots)
+      @activity.images.attach(images_to_attach)
+    end
+
+    def purge_selected_images
+      ids = params.dig(:activity, :remove_image_ids)&.reject(&:blank?) || []
+      ids.each do |id|
+        attachment = @activity.images.attachments.find_by(id: id)
+        attachment&.purge
+      end
+    end
+
+    def update_image_order
+      ordered_ids = params.dig(:activity, :image_order)&.reject(&:blank?) || []
+      ordered_ids.each_with_index do |id, index|
+        attachment = @activity.images.attachments.find_by(id: id)
+        attachment&.update(position: index + 1)
+      end
+    end
+
+    def normalize_image_positions
+      @activity.images.attachments.order(:position, :created_at).each_with_index do |attachment, index|
+        attachment.update(position: index + 1)
+      end
     end
 end

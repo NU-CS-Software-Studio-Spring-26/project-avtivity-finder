@@ -4,78 +4,32 @@
   <h1 class="mb-0">Activities</h1>
   <div class="d-flex gap-2">
     <%= link_to "New Activity", new_activity_path, class: "btn btn-primary" %>
-    <button type="button" class="btn btn-danger" id="deleteSelectedBtn" onclick="deleteSelected()" disabled>
-      Delete Selected
-    </button>
   </div>
 </div>
 
-<form id="bulkDeleteForm">
-  <table class="table table-striped align-middle">
-    <thead>
-      <tr>
-        <th style="width: 40px;">
-          <input type="checkbox" class="form-check-input" id="selectAll" onclick="toggleSelectAll()">
-        </th>
-        <th>Title</th>
-        <th>City</th>
-        <th>Category</th>
-        <th>Date</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @activities.each do |activity| %>
-        <tr>
-          <td>
-            <input type="checkbox" class="form-check-input activity-checkbox"
-                   value="<%= activity.id %>" onclick="updateDeleteBtn()">
-          </td>
-          <td><%= activity.title %></td>
-          <td><%= activity.city %></td>
-          <td><%= activity.category %></td>
-          <td><%= activity.event_date %></td>
-          <td>
-            <div class="d-flex gap-2">
-              <%= link_to "Show", activity, class: "btn btn-sm btn-outline-primary" %>
-              <%= link_to "Edit", edit_activity_path(activity), class: "btn btn-sm btn-outline-secondary" %>
-            </div>
-          </td>
-        </tr> 
-      <% end %>
-    </tbody>
-  </table>
-</form>
+<div class="activity-grid">
+  <% @activities.each do |activity| %>
+    <div class="activity-card">
+      <div class="activity-card-img">
+        <%= image_tag activity_image(activity), class: "img-fluid" %>
+      </div>
 
-<script>
-  function toggleSelectAll() {
-    const selectAll = document.getElementById('selectAll');
-    const checkboxes = document.querySelectorAll('.activity-checkbox');
-    checkboxes.forEach(cb => cb.checked = selectAll.checked);
-    updateDeleteBtn();
-  }
+      <div class="activity-card-body">
+        <h5 class="activity-title">
+          <%= link_to activity.title, activity %>
+        </h5>
 
-  function updateDeleteBtn() {
-    const checked = document.querySelectorAll('.activity-checkbox:checked');
-    const btn = document.getElementById('deleteSelectedBtn');
-    btn.disabled = checked.length === 0;
-    const all = document.querySelectorAll('.activity-checkbox');
-    document.getElementById('selectAll').indeterminate = checked.length > 0 && checked.length < all.length;
-    document.getElementById('selectAll').checked = checked.length === all.length && all.length > 0;
-  }
+        <p class="activity-meta">
+          <%= activity.city %>
+          <% if activity.event_date.present? %>
+            • <%= activity.event_date.strftime("%b %d") %>
+          <% end %>
+        </p>
 
-  function deleteSelected() {
-    const checked = document.querySelectorAll('.activity-checkbox:checked');
-    if (!confirm(`Are you sure you want to delete ${checked.length} activities?`)) return;
-    checked.forEach(cb => {
-      fetch(`/activities/${cb.value}`, {
-        method: 'DELETE',
-        headers: {
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
-          'Accept': 'application/json'
-        }
-      });
-    });
-    setTimeout(() => window.location.reload(), 500);
-  }
-</script>
+        <p class="activity-category">
+          <%= activity.category %>
+        </p>
+      </div>
+    </div>
+  <% end %>
+</div>
