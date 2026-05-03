@@ -1,5 +1,17 @@
 require "test_helper"
 
+class ActivitiesControllerUnauthenticatedTest < ActionDispatch::IntegrationTest
+  test "guest is redirected from activities index" do
+    get activities_url
+    assert_redirected_to login_path
+  end
+
+  test "guest is redirected from root" do
+    get root_url
+    assert_redirected_to login_path
+  end
+end
+
 class ActivitiesControllerTest < ActionDispatch::IntegrationTest
   setup do
     # @activity = activities(:one)
@@ -64,5 +76,26 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to activities_url
+  end
+
+  test "cannot edit another user's activity" do
+    other = User.create!(
+      name: "Other",
+      email: "other@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+    foreign = Activity.create!(
+      title: "Theirs",
+      city: "NYC",
+      category: "X",
+      event_date: Date.today,
+      user: other
+    )
+
+    get edit_activity_url(foreign)
+    assert_redirected_to root_path
+    follow_redirect!
+    assert_match "Not authorized", response.body
   end
 end

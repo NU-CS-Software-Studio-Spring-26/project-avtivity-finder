@@ -30,6 +30,14 @@ class UserTest < ActiveSupport::TestCase
     assert_not duplicate_user.valid?
   end
 
+  test "email should be unique ignoring case" do
+    @user.save!
+    dup = @user.dup
+    dup.email = @user.email.upcase
+    assert_not dup.valid?
+    assert dup.errors.of_kind?(:email, :taken)
+  end
+
   test "password should be at least 6 characters" do
     @user.password = "123"
     @user.password_confirmation = "123"

@@ -1,10 +1,12 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [ :show, :edit, :update, :destroy ]
   before_action :require_login, except: [ :new, :create ]
-  before_action :authorize_user!, only: [ :show, :edit, :update, :destroy ]
+  before_action :authorize_user!, only: [ :edit, :update, :destroy ]
 
   def authorize_user!
-    redirect_to root_path, alert: "Not authorized" unless @user == current_user
+    return if @user == current_user
+
+    redirect_to root_path, alert: "Not authorized"
   end
 
   def index
@@ -12,7 +14,6 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
   end
 
   def new
@@ -23,8 +24,8 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      # redirect_to @user, notice: "User created successfully."
-      session[:user_id] = @user.id   # auto-login after signup
+      reset_session
+      session[:user_id] = @user.id
       redirect_to root_path, notice: "Account created successfully!"
     else
       render :new, status: :unprocessable_entity
@@ -32,14 +33,9 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.find(params[:id])
-    authorize_user!
   end
 
   def update
-    @user = User.find(params[:id])
-    authorize_user!
-
     if @user.update(user_params)
       redirect_to @user, notice: "User updated successfully."
     else
