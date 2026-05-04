@@ -1,10 +1,20 @@
 <% content_for :title, "Editing activity" %>
 
-<h1>Editing activity</h1>
+<div class="surface-card">
+  <div class="surface-card-header">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div>
+        <h1 class="h3 mb-1">Edit activity</h1>
+        <div class="text-muted">Update details, manage images, and keep your attendees informed.</div>
+      </div>
+      <div class="d-flex gap-2">
+        <%= link_to "View", @activity, class: "btn btn-outline-secondary btn-sm" %>
+        <%= link_to "Back", activities_path, class: "btn btn-outline-secondary btn-sm" %>
+      </div>
+    </div>
+  </div>
 
-<%= render "form", activity: @activity %>
-
-<div class="d-flex gap-2 mt-3">
-  <%= link_to "Show Activity", @activity, class: "btn btn-outline-secondary" %>
-  <%= link_to "Back to Activities", activities_path, class: "btn btn-outline-primary" %>
+  <div class="surface-card-body">
+    <%= render "form", activity: @activity %>
+  </div>
 </div>

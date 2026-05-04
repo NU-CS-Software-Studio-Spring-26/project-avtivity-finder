@@ -1,15 +1,26 @@
-<h1><%= @user.name %></h1>
+<% content_for :title, @user.name %>
 
-<div class="card mb-3">
-  <div class="card-body">
-    <p class="mb-0"><strong>Email:</strong> <%= @user.email %></p>
+<div class="surface-card">
+  <div class="surface-card-body">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
+             style="width:56px;height:56px;background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.12);">
+          <span class="fw-semibold"><%= @user.name.to_s.first&.upcase || "U" %></span>
+        </div>
+        <div>
+          <h1 class="h3 mb-1"><%= @user.name %></h1>
+          <div class="text-muted"><%= @user.email %></div>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap gap-2">
+        <%= link_to "Activities", activities_path, class: "btn btn-outline-secondary btn-sm" %>
+        <% if logged_in? && @user == current_user %>
+          <%= link_to "Edit profile", edit_user_path(@user), class: "btn btn-secondary btn-sm" %>
+          <%= button_to "Delete account", @user, method: :delete, class: "btn btn-outline-danger btn-sm", form: { data: { turbo_confirm: "Delete your account? This cannot be undone." } } %>
+        <% end %>
+      </div>
+    </div>
   </div>
-</div>
-
-<div class="d-flex gap-2">
-  <%= link_to "Back to Activities", activities_path, class: "btn btn-outline-primary" %>
-  <% if logged_in? && @user == current_user %>
-    <%= link_to "Edit", edit_user_path(@user), class: "btn btn-secondary" %>
-    <%= button_to "Delete", @user, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Are you sure?" } } %>
-  <% end %>
 </div>

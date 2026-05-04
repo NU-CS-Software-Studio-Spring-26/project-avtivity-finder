@@ -134,6 +134,6 @@
       <%= link_to "Edit Activity", edit_activity_path(@activity), class: "btn btn-secondary" %>
       <%= button_to "Delete Activity", @activity, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Are you sure?" } } %>
     <% end %>
-    <%= link_to "Back to Activities", activities_path, class: "btn btn-outline-primary" %>
+    <%= link_to "Back to Activities", activities_path, class: "btn btn-outline-secondary" %>
   </div>
 </div>

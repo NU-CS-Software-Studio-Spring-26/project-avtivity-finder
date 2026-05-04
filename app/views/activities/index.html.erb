@@ -1,42 +1,56 @@
 <% content_for :title, "Activities" %>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1 class="mb-0">Activities</h1>
-  <div class="d-flex gap-2">
-    <%= link_to "New Activity", new_activity_path, class: "btn btn-primary" %>
-  </div>
-</div>
+<div data-controller="search">
+  <section class="page-hero mb-4">
+    <div class="page-hero-inner">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+        <div>
+          <h1 class="mb-1">Find your next plan</h1>
+          <p class="text-muted mb-0">Browse activities, RSVP in one click, and see who’s going.</p>
+        </div>
 
-<div class="activity-search mb-4" data-controller="search">
-  <div class="activity-search-controls">
-    <div class="activity-search-input-wrap">
-      <input
-        type="search"
-        class="form-control activity-search-input"
-        placeholder="Search by activity name"
-        aria-label="Search activities by name"
-        data-search-target="input"
-        data-action="input->search#filter search->search#filter"
-      >
-      <button
-        type="button"
-        class="activity-search-input-clear"
-        aria-label="Clear search"
-        data-search-target="inputClearButton"
-        data-action="search#clear"
-      >
-        ×
-      </button>
+        <div class="d-flex gap-2">
+          <%= link_to "New Activity", new_activity_path, class: "btn btn-primary" %>
+        </div>
+      </div>
+
+      <div class="activity-search mt-3">
+        <div class="activity-search-controls">
+          <div class="activity-search-input-wrap">
+            <input
+              type="search"
+              class="form-control activity-search-input"
+              placeholder="Search by activity name"
+              aria-label="Search activities by name"
+              data-search-target="input"
+              data-action="input->search#filter search->search#filter"
+            >
+            <button
+              type="button"
+              class="activity-search-input-clear"
+              aria-label="Clear search"
+              data-search-target="inputClearButton"
+              data-action="search#clear"
+            >
+              ×
+            </button>
+          </div>
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-search-target="clearButton"
+            data-action="search#clear"
+          >
+            Clear
+          </button>
+        </div>
+
+        <p class="activity-search-empty d-none mb-0 mt-2" data-search-target="emptyState">
+          No activities match your search.
+        </p>
+      </div>
     </div>
-    <button
-      type="button"
-      class="btn btn-outline-secondary"
-      data-search-target="clearButton"
-      data-action="search#clear"
-    >
-      Clear
-    </button>
-  </div>
+  </section>
 
   <div class="activity-grid" data-search-target="results">
     <% @activities.each do |activity| %>
@@ -49,43 +63,39 @@
           <%= image_tag activity_image(activity), class: "img-fluid" %>
         </div>
 
-          <div class="activity-card-body">
-            <div class="d-flex flex-wrap gap-2 mb-2">
-              <% if @joined_activity_ids.include?(activity.id) %>
-                <span class="badge text-bg-success">You’re going</span>
-              <% end %>
+      <div class="activity-card-body">
+        <div class="d-flex flex-wrap gap-2 mb-2">
+          <% if @joined_activity_ids.include?(activity.id) %>
+            <span class="badge text-bg-success">You’re going</span>
+          <% end %>
 
-              <% taken = @signup_counts[activity.id] || 0 %>
-              <% if activity.capacity.present? %>
-                <% full = taken >= activity.capacity %>
-                <span class="badge <%= full ? "text-bg-warning" : "text-bg-light border" %>">
-                  <%= taken %>/<%= activity.capacity %> spots<%= full ? " (full)" : "" %>
-                </span>
-              <% else %>
-                <span class="badge text-bg-light border"><%= taken %> going</span>
-              <% end %>
-            </div>
-
-            <h5 class="activity-title">
-              <%= link_to activity.title, activity %>
-            </h5>
-
-          <p class="activity-meta">
-            <%= activity.city %>
-            <% if activity.event_date.present? %>
-              • <%= activity.event_date.strftime("%b %d") %>
-            <% end %>
-          </p>
-
-          <p class="activity-category">
-            <%= activity.category %>
-          </p>
+          <% taken = @signup_counts[activity.id] || 0 %>
+          <% if activity.capacity.present? %>
+            <% full = taken >= activity.capacity %>
+            <span class="badge <%= full ? "text-bg-warning" : "text-bg-light border" %>">
+              <%= taken %>/<%= activity.capacity %> spots<%= full ? " (full)" : "" %>
+            </span>
+          <% else %>
+            <span class="badge text-bg-light border"><%= taken %> going</span>
+          <% end %>
         </div>
+
+        <h5 class="activity-title mb-1">
+          <%= link_to activity.title, activity %>
+        </h5>
+
+        <p class="activity-meta mb-1">
+          <%= activity.city %>
+          <% if activity.event_date.present? %>
+            • <%= activity.event_date.strftime("%b %d") %>
+          <% end %>
+        </p>
+
+        <p class="activity-category mb-0">
+          <%= activity.category %>
+        </p>
+      </div>
       </div>
     <% end %>
   </div>
-
-  <p class="activity-search-empty d-none mb-0" data-search-target="emptyState">
-    No activities match your search.
-  </p>
 </div>
