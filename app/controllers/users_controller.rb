@@ -9,10 +9,6 @@ class UsersController < ApplicationController
     redirect_to root_path, alert: "Not authorized"
   end
 
-  def index
-    @users = User.all
-  end
-
   def show
   end
 
@@ -45,7 +41,7 @@ class UsersController < ApplicationController
 
   def destroy
     @user.destroy
-    redirect_to users_path, notice: "User deleted successfully."
+    redirect_to root_path, notice: "User deleted successfully."
   end
 
   private
