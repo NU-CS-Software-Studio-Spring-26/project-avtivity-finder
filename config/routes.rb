@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root "activities#index"
 
-  resources :users, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
+  resources :users, only: [ :new, :create, :show, :edit, :update, :destroy ]
   resources :activities do
     member do
       post :join

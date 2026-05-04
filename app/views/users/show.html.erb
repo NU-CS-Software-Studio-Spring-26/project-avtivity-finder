@@ -7,7 +7,7 @@
 </div>
 
 <div class="d-flex gap-2">
-  <%= link_to "Back to Users", users_path, class: "btn btn-outline-primary" %>
+  <%= link_to "Back to Activities", activities_path, class: "btn btn-outline-primary" %>
   <% if logged_in? && @user == current_user %>
     <%= link_to "Edit", edit_user_path(@user), class: "btn btn-secondary" %>
     <%= button_to "Delete", @user, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Are you sure?" } } %>
