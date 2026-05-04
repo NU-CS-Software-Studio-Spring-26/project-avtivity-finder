@@ -140,6 +140,49 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to activity_url(foreign)
   end
 
+  test "cannot join when activity is full" do
+    host = User.create!(
+      name: "Host",
+      email: "fullhost@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+
+    filler = User.create!(
+      name: "Filler",
+      email: "filler@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+
+    joiner = User.create!(
+      name: "Late Joiner",
+      email: "late@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+
+    foreign = Activity.create!(
+      title: "Tiny event",
+      city: "NYC",
+      category: "X",
+      event_date: Date.today,
+      user: host,
+      capacity: 1
+    )
+
+    ActivitySignup.create!(activity: foreign, user: filler)
+
+    post login_path, params: { email: joiner.email, password: "password" }
+
+    assert_no_difference("ActivitySignup.count") do
+      post join_activity_url(foreign)
+    end
+    assert_redirected_to activity_url(foreign)
+    follow_redirect!
+    assert_match "full", flash[:alert]
+  end
+
   test "host cannot join their own activity" do
     assert_no_difference("ActivitySignup.count") do
       post join_activity_url(@activity)

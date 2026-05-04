@@ -8,6 +8,9 @@ class Activity < ApplicationRecord
   validates :city, presence: true
   validates :category, presence: true
   validates :event_date, presence: true
+  validates :capacity,
+            numericality: { only_integer: true, greater_than: 0 },
+            allow_nil: true
 
   has_many_attached :images
   validate :image_limit
@@ -18,6 +21,14 @@ class Activity < ApplicationRecord
 
   def thumbnail
     ordered_images.first
+  end
+
+  def attendee_count
+    activity_signups.count
+  end
+
+  def at_capacity?
+    capacity.present? && attendee_count >= capacity
   end
 
   private

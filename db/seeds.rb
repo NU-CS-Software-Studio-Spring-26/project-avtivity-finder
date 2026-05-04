@@ -24,9 +24,9 @@ participant = User.find_or_create_by!(email: "joiner@example.com") do |u|
 end
 
 activities = [
-  { title: "Sunrise Ridge Hike", description: "Beginner-friendly morning hike with scenic views.", location: "Ridge Trailhead", city: "Seattle", category: "Hike", event_date: Date.today + 2, user: user },
-  { title: "Downtown Taco Crawl", description: "Visit 4 taco spots in one evening.", location: "Pike Street", city: "Seattle", category: "Food Crawl", event_date: Date.today + 3, user: user },
-  { title: "Coffee and Code Meetup", description: "Casual meetup for students to code together.", location: "Bean House Cafe", city: "Seattle", category: "Coffee Meetup", event_date: Date.today + 4, user: user },
+  { title: "Sunrise Ridge Hike", description: "Beginner-friendly morning hike with scenic views.", location: "Ridge Trailhead", city: "Seattle", category: "Hike", event_date: Date.today + 2, user: user, capacity: 25 },
+  { title: "Downtown Taco Crawl", description: "Visit 4 taco spots in one evening.", location: "Pike Street", city: "Seattle", category: "Food Crawl", event_date: Date.today + 3, user: user, capacity: 40 },
+  { title: "Coffee and Code Meetup", description: "Casual meetup for students to code together.", location: "Bean House Cafe", city: "Seattle", category: "Coffee Meetup", event_date: Date.today + 4, user: user, capacity: 30 },
   { title: "Campus Trivia Night", description: "Team trivia with prizes for top 3 teams.", location: "Student Center", city: "Seattle", category: "Trivia Night", event_date: Date.today + 5, user: user },
   { title: "First Friday Art Walk", description: "Walk through local galleries and street art.", location: "Arts District", city: "Seattle", category: "Art Walk", event_date: Date.today + 6, user: user },
   { title: "Outdoor Yoga Basics", description: "Beginner yoga class in the park.", location: "Green Lake Park", city: "Seattle", category: "Fitness Class", event_date: Date.today + 7, user: user },

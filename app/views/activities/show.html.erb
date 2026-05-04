@@ -68,6 +68,20 @@
           <span class="activity-info-label">Host</span>
           <span class="activity-info-value"><%= @activity.user&.name.presence || "Unknown" %></span>
         </div>
+
+        <div class="activity-info-row">
+          <span class="activity-info-label">Spots</span>
+          <span class="activity-info-value">
+            <% if @activity.capacity.present? %>
+              <%= @signup_count %>/<%= @activity.capacity %>
+              <% if @full %>
+                <span class="badge text-bg-warning ms-2">Full</span>
+              <% end %>
+            <% else %>
+              <%= @signup_count %> going (no limit)
+            <% end %>
+          </span>
+        </div>
       </div>
 
       <div class="activity-info-card mt-3">
@@ -100,6 +114,8 @@
 
           <% if @joined %>
             <%= button_to "Leave activity", leave_activity_path(@activity), method: :delete, class: "btn btn-outline-danger w-100", form: { data: { turbo_confirm: "Leave this activity?" } } %>
+          <% elsif @full %>
+            <button class="btn btn-secondary w-100" type="button" disabled>This activity is full</button>
           <% else %>
             <%= button_to "Join activity", join_activity_path(@activity), method: :post, class: "btn btn-primary w-100" %>
           <% end %>
