@@ -1,5 +1,17 @@
 require "test_helper"
 
+class ActivitiesControllerUnauthenticatedTest < ActionDispatch::IntegrationTest
+  test "guest is redirected from activities index" do
+    get activities_url
+    assert_redirected_to login_path
+  end
+
+  test "guest is redirected from root" do
+    get root_url
+    assert_redirected_to login_path
+  end
+end
+
 class ActivitiesControllerTest < ActionDispatch::IntegrationTest
   setup do
     # @activity = activities(:one)
@@ -14,6 +26,7 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
     @activity = Activity.create!(
       title: "Running",
       city: "Seattle",
+      category: "Test",
       event_date: Date.today,
       user: @user
     )
@@ -39,7 +52,7 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
       post activities_url, params: { activity: { category: @activity.category, city: @activity.city, description: @activity.description, event_date: @activity.event_date, location: @activity.location, title: @activity.title } }
     end
 
-    assert_redirected_to activity_url(Activity.last)
+    assert_redirected_to activities_path
   end
 
   test "should show activity" do
@@ -54,7 +67,7 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
 
   test "should update activity" do
     patch activity_url(@activity), params: { activity: { category: @activity.category, city: @activity.city, description: @activity.description, event_date: @activity.event_date, location: @activity.location, title: @activity.title } }
-    assert_redirected_to activity_url(@activity)
+    assert_redirected_to activities_path
   end
 
   test "should destroy activity" do
@@ -63,5 +76,119 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to activities_url
+  end
+
+  test "cannot edit another user's activity" do
+    other = User.create!(
+      name: "Other",
+      email: "other@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+    foreign = Activity.create!(
+      title: "Theirs",
+      city: "NYC",
+      category: "X",
+      event_date: Date.today,
+      user: other
+    )
+
+    get edit_activity_url(foreign)
+    assert_redirected_to root_path
+    follow_redirect!
+    assert_match "Not authorized", response.body
+  end
+
+  test "can join and leave someone else's activity" do
+    other = User.create!(
+      name: "Joiner",
+      email: "joiner@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+    foreign = Activity.create!(
+      title: "Theirs",
+      city: "NYC",
+      category: "X",
+      event_date: Date.today,
+      user: other
+    )
+
+    joiner = User.create!(
+      name: "Participant",
+      email: "participant@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+
+    post login_path, params: { email: joiner.email, password: "password" }
+
+    assert_difference("ActivitySignup.count", 1) do
+      post join_activity_url(foreign)
+    end
+    assert_redirected_to activity_url(foreign)
+    follow_redirect!
+    assert_match "joined", flash[:notice]
+
+    assert_no_difference("ActivitySignup.count") do
+      post join_activity_url(foreign)
+    end
+
+    assert_difference("ActivitySignup.count", -1) do
+      delete leave_activity_url(foreign)
+    end
+    assert_redirected_to activity_url(foreign)
+  end
+
+  test "cannot join when activity is full" do
+    host = User.create!(
+      name: "Host",
+      email: "fullhost@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+
+    filler = User.create!(
+      name: "Filler",
+      email: "filler@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+
+    joiner = User.create!(
+      name: "Late Joiner",
+      email: "late@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+
+    foreign = Activity.create!(
+      title: "Tiny event",
+      city: "NYC",
+      category: "X",
+      event_date: Date.today,
+      user: host,
+      capacity: 1
+    )
+
+    ActivitySignup.create!(activity: foreign, user: filler)
+
+    post login_path, params: { email: joiner.email, password: "password" }
+
+    assert_no_difference("ActivitySignup.count") do
+      post join_activity_url(foreign)
+    end
+    assert_redirected_to activity_url(foreign)
+    follow_redirect!
+    assert_match "full", flash[:alert]
+  end
+
+  test "host cannot join their own activity" do
+    assert_no_difference("ActivitySignup.count") do
+      post join_activity_url(@activity)
+    end
+    assert_redirected_to activity_url(@activity)
+    follow_redirect!
+    assert_match "hosting", flash[:alert]
   end
 end
