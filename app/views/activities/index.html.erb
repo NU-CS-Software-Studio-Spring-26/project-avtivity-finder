@@ -10,72 +10,85 @@
   </div>
 </div>
 
-<form id="bulkDeleteForm">
-  <table class="table table-striped align-middle">
-    <thead>
-      <tr>
-        <th style="width: 40px;">
-          <input type="checkbox" class="form-check-input" id="selectAll" onclick="toggleSelectAll()">
-        </th>
-        <th>Title</th>
-        <th>City</th>
-        <th>Category</th>
-        <th>Date</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @activities.each do |activity| %>
-        <tr>
-          <td>
-            <input type="checkbox" class="form-check-input activity-checkbox"
-                   value="<%= activity.id %>" onclick="updateDeleteBtn()">
-          </td>
-          <td><%= activity.title %></td>
-          <td><%= activity.city %></td>
-          <td><%= activity.category %></td>
-          <td><%= activity.event_date %></td>
-          <td>
-            <div class="d-flex gap-2">
-              <%= link_to "Show", activity, class: "btn btn-sm btn-outline-primary" %>
-              <%= link_to "Edit", edit_activity_path(activity), class: "btn btn-sm btn-outline-secondary" %>
+<div class="activity-search mb-4" data-controller="search">
+  <div class="activity-search-controls">
+    <div class="activity-search-input-wrap">
+      <input
+        type="search"
+        class="form-control activity-search-input"
+        placeholder="Search by activity name"
+        aria-label="Search activities by name"
+        data-search-target="input"
+        data-action="input->search#filter search->search#filter"
+      >
+      <button
+        type="button"
+        class="activity-search-input-clear"
+        aria-label="Clear search"
+        data-search-target="inputClearButton"
+        data-action="search#clear"
+      >
+        ×
+      </button>
+    </div>
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      data-search-target="clearButton"
+      data-action="search#clear"
+    >
+      Clear
+    </button>
+  </div>
+
+  <div class="activity-grid" data-search-target="results">
+    <% @activities.each do |activity| %>
+      <div
+        class="activity-card"
+        data-search-target="card"
+        data-activity-title="<%= activity.title.to_s.downcase %>"
+      >
+        <div class="activity-card-img">
+          <%= image_tag activity_image(activity), class: "img-fluid" %>
+        </div>
+
+          <div class="activity-card-body">
+            <div class="d-flex flex-wrap gap-2 mb-2">
+              <% if @joined_activity_ids.include?(activity.id) %>
+                <span class="badge text-bg-success">You’re going</span>
+              <% end %>
+
+              <% taken = @signup_counts[activity.id] || 0 %>
+              <% if activity.capacity.present? %>
+                <% full = taken >= activity.capacity %>
+                <span class="badge <%= full ? "text-bg-warning" : "text-bg-light border" %>">
+                  <%= taken %>/<%= activity.capacity %> spots<%= full ? " (full)" : "" %>
+                </span>
+              <% else %>
+                <span class="badge text-bg-light border"><%= taken %> going</span>
+              <% end %>
             </div>
-          </td>
-        </tr> 
-      <% end %>
-    </tbody>
-  </table>
-</form>
 
-<script>
-  function toggleSelectAll() {
-    const selectAll = document.getElementById('selectAll');
-    const checkboxes = document.querySelectorAll('.activity-checkbox');
-    checkboxes.forEach(cb => cb.checked = selectAll.checked);
-    updateDeleteBtn();
-  }
+            <h5 class="activity-title">
+              <%= link_to activity.title, activity %>
+            </h5>
 
-  function updateDeleteBtn() {
-    const checked = document.querySelectorAll('.activity-checkbox:checked');
-    const btn = document.getElementById('deleteSelectedBtn');
-    btn.disabled = checked.length === 0;
-    const all = document.querySelectorAll('.activity-checkbox');
-    document.getElementById('selectAll').indeterminate = checked.length > 0 && checked.length < all.length;
-    document.getElementById('selectAll').checked = checked.length === all.length && all.length > 0;
-  }
+          <p class="activity-meta">
+            <%= activity.city %>
+            <% if activity.event_date.present? %>
+              • <%= activity.event_date.strftime("%b %d") %>
+            <% end %>
+          </p>
 
-  function deleteSelected() {
-    const checked = document.querySelectorAll('.activity-checkbox:checked');
-    if (!confirm(`Are you sure you want to delete ${checked.length} activities?`)) return;
-    checked.forEach(cb => {
-      fetch(`/activities/${cb.value}`, {
-        method: 'DELETE',
-        headers: {
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
-          'Accept': 'application/json'
-        }
-      });
-    });
-    setTimeout(() => window.location.reload(), 500);
-  }
-</script>
+          <p class="activity-category">
+            <%= activity.category %>
+          </p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <p class="activity-search-empty d-none mb-0" data-search-target="emptyState">
+    No activities match your search.
+  </p>
+</div>
