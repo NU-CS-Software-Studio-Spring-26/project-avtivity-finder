@@ -48,6 +48,50 @@
 }
 
 /* Activities Pages */
+.activity-search-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.activity-search-input-wrap {
+  position: relative;
+  width: min(420px, 100%);
+}
+
+.activity-search-controls .activity-search-input {
+  width: 100%;
+  padding-right: 2.25rem;
+}
+
+.activity-search-controls .form-control,
+.activity-search-input-wrap {
+  max-width: 420px;
+}
+
+.activity-search-input-clear {
+  position: absolute;
+  top: 50%;
+  right: 0.45rem;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  color: #6c757d;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+}
+
+.activity-search-input-clear:hover {
+  color: #212529;
+  background: #f1f3f5;
+}
+
+.activity-search-empty {
+  color: #6c757d;
+  font-size: 0.95rem;
+}
 .activity-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -260,6 +304,15 @@
 }
 
 @media (max-width: 768px) {
+  .activity-search-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .activity-search-controls .form-control,
+  .activity-search-input-wrap {
+    max-width: 100%;
+  }
   .activity-carousel-image {
     height: 320px;
   }
