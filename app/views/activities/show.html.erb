@@ -63,13 +63,61 @@
           <span class="activity-info-label">Category</span>
           <span class="activity-info-value"><%= @activity.category.presence || "N/A" %></span>
         </div>
+
+        <div class="activity-info-row">
+          <span class="activity-info-label">Host</span>
+          <span class="activity-info-value"><%= @activity.user&.name.presence || "Unknown" %></span>
+        </div>
       </div>
+
+      <div class="activity-info-card mt-3">
+        <h2>Attendees (<%= @attendees.size %>)</h2>
+
+        <% if @attendees.any? %>
+          <ul class="list-group list-group-flush activity-attendee-list">
+            <% @attendees.each do |attendee| %>
+              <li class="list-group-item px-0">
+                <div class="d-flex justify-content-between align-items-center gap-2">
+                  <div>
+                    <div class="fw-semibold"><%= attendee.name %></div>
+                    <div class="text-muted small"><%= attendee.email %></div>
+                  </div>
+                  <% if attendee == current_user %>
+                    <span class="badge text-bg-secondary">You</span>
+                  <% end %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-muted mb-0">No one has signed up yet.</p>
+        <% end %>
+      </div>
+
+      <% if @activity.user_id != current_user.id %>
+        <div class="activity-info-card mt-3">
+          <h2>RSVP</h2>
+
+          <% if @joined %>
+            <%= button_to "Leave activity", leave_activity_path(@activity), method: :delete, class: "btn btn-outline-danger w-100", form: { data: { turbo_confirm: "Leave this activity?" } } %>
+          <% else %>
+            <%= button_to "Join activity", join_activity_path(@activity), method: :post, class: "btn btn-primary w-100" %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="activity-info-card mt-3">
+          <h2>RSVP</h2>
+          <p class="text-muted mb-0">You’re the host for this activity.</p>
+        </div>
+      <% end %>
     </aside>
   </div>
 
-  <div class="mt-4 d-flex gap-2">
-    <%= link_to "Edit Activity", edit_activity_path(@activity), class: "btn btn-secondary" %>
+  <div class="mt-4 d-flex flex-wrap gap-2">
+    <% if @activity.user == current_user %>
+      <%= link_to "Edit Activity", edit_activity_path(@activity), class: "btn btn-secondary" %>
+      <%= button_to "Delete Activity", @activity, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Are you sure?" } } %>
+    <% end %>
     <%= link_to "Back to Activities", activities_path, class: "btn btn-outline-primary" %>
-    <%= button_to "Delete Activity", @activity, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Are you sure?" } } %>
   </div>
 </div>
