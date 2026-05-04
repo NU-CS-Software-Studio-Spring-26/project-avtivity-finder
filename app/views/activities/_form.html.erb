@@ -40,6 +40,12 @@
     <%= form.date_field :event_date, class: "form-control", required: true %>
   </div>
 
+  <div class="mb-3">
+    <%= form.label :capacity, "Capacity (optional)", class: "form-label" %>
+    <%= form.number_field :capacity, class: "form-control", min: 1, step: 1 %>
+    <div class="form-text">Maximum attendees (not including the host). Leave blank for no limit.</div>
+  </div>
+
   <div class="mb-3 image-upload-area">
     <%= form.label :images, "Activity Images", class: "form-label" %>
 

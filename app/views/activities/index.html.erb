@@ -14,10 +14,26 @@
         <%= image_tag activity_image(activity), class: "img-fluid" %>
       </div>
 
-      <div class="activity-card-body">
-        <h5 class="activity-title">
-          <%= link_to activity.title, activity %>
-        </h5>
+        <div class="activity-card-body">
+          <div class="d-flex flex-wrap gap-2 mb-2">
+            <% if @joined_activity_ids.include?(activity.id) %>
+              <span class="badge text-bg-success">You’re going</span>
+            <% end %>
+
+            <% taken = @signup_counts[activity.id] || 0 %>
+            <% if activity.capacity.present? %>
+              <% full = taken >= activity.capacity %>
+              <span class="badge <%= full ? "text-bg-warning" : "text-bg-light border" %>">
+                <%= taken %>/<%= activity.capacity %> spots<%= full ? " (full)" : "" %>
+              </span>
+            <% else %>
+              <span class="badge text-bg-light border"><%= taken %> going</span>
+            <% end %>
+          </div>
+
+          <h5 class="activity-title">
+            <%= link_to activity.title, activity %>
+          </h5>
 
         <p class="activity-meta">
           <%= activity.city %>

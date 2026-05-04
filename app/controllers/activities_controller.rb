@@ -1,6 +1,6 @@
 class ActivitiesController < ApplicationController
   before_action :require_login
-  before_action :set_activity, only: %i[ show edit update destroy ]
+  before_action :set_activity, only: %i[ show edit update destroy join leave ]
   before_action :authorize_activity!, only: %i[ edit update destroy ]
 
   def authorize_activity!
@@ -9,12 +9,60 @@ class ActivitiesController < ApplicationController
 
   # GET /activities or /activities.json
   def index
-    @activities = Activity.all
-    # @activities = current_user.activities
+    @activities = Activity.all.order(event_date: :asc)
+
+    activity_ids = @activities.map(&:id)
+    @signup_counts = ActivitySignup.where(activity_id: activity_ids).group(:activity_id).count
+    @joined_activity_ids = ActivitySignup.where(user: current_user, activity_id: activity_ids).pluck(:activity_id).to_set
   end
 
   # GET /activities/1 or /activities/1.json
   def show
+    @joined = @activity.attendees.exists?(current_user.id)
+    @attendees = @activity.attendees.order(:name)
+    @signup_count = @activity.activity_signups.count
+    @full = @activity.capacity.present? && @signup_count >= @activity.capacity
+  end
+
+  # POST /activities/1/join
+  def join
+    if @activity.user_id == current_user.id
+      redirect_to @activity, alert: "You’re hosting this activity."
+      return
+    end
+
+    signup = @activity.activity_signups.find_or_initialize_by(user: current_user)
+
+    if signup.persisted?
+      redirect_to @activity, notice: "You’re already signed up."
+      return
+    end
+
+    if @activity.capacity.present? && @activity.activity_signups.count >= @activity.capacity
+      redirect_to @activity, alert: "This activity is full."
+      return
+    end
+
+    begin
+      if signup.save
+        redirect_to @activity, notice: "You joined this activity."
+      else
+        redirect_to @activity, alert: signup.errors.full_messages.to_sentence
+      end
+    rescue ActiveRecord::RecordNotUnique
+      redirect_to @activity, alert: "This activity is full."
+    end
+  end
+
+  # DELETE /activities/1/leave
+  def leave
+    removed = @activity.activity_signups.where(user: current_user).destroy_all
+
+    if removed.any?
+      redirect_to @activity, notice: "You left this activity."
+    else
+      redirect_to @activity, alert: "You weren’t signed up for this activity."
+    end
   end
 
   # GET /activities/new
@@ -76,7 +124,8 @@ class ActivitiesController < ApplicationController
           :location,
           :city,
           :category,
-          :event_date
+          :event_date,
+          :capacity
         ])
     end
 
