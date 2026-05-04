@@ -1,6 +1,9 @@
+<% content_for :title, "Sign up" %>
+
 <div class="auth-container">
   <div class="auth-card">
-    <h1 class="auth-title">Create Account</h1>
+    <h1 class="auth-title mb-1">Create your account</h1>
+    <p class="text-muted text-center mb-4">Join activities, host events, and invite friends.</p>
 
     <%= form_with model: @user do |f| %>
       <% if @user.errors.any? %>

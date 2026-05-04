@@ -1,3 +1,20 @@
-<h1>Edit User</h1>
+<% content_for :title, "Edit profile" %>
 
-<%= render "form", user: @user %>
+<div class="surface-card">
+  <div class="surface-card-header">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div>
+        <h1 class="h3 mb-1">Edit profile</h1>
+        <div class="text-muted">Update your name, email, or password.</div>
+      </div>
+      <div class="d-flex gap-2">
+        <%= link_to "Profile", @user, class: "btn btn-outline-secondary btn-sm" %>
+        <%= link_to "Back", activities_path, class: "btn btn-outline-secondary btn-sm" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="surface-card-body">
+    <%= render "form", user: @user %>
+  </div>
+</div>

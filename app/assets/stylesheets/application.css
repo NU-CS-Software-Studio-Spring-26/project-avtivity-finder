@@ -8,7 +8,208 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
- 
+
+:root {
+  --af-bg: #070a14;
+  --af-bg-2: #0b1220;
+  --af-surface: rgba(255, 255, 255, 0.06);
+  --af-surface-2: rgba(255, 255, 255, 0.09);
+  --af-border: rgba(255, 255, 255, 0.12);
+  --af-text: rgba(255, 255, 255, 0.92);
+  --af-muted: rgba(255, 255, 255, 0.70);
+  --af-muted-2: rgba(255, 255, 255, 0.55);
+  --af-shadow: 0 18px 60px rgba(0, 0, 0, 0.38);
+  --af-shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.22);
+  --af-primary: #6d5efc;
+  --af-primary-2: #3dd5f3;
+  --af-radius: 18px;
+}
+
+html, body {
+  height: 100%;
+}
+
+.app-body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(109, 94, 252, 0.25), transparent 55%),
+    radial-gradient(900px 500px at 90% 0%, rgba(61, 213, 243, 0.18), transparent 60%),
+    linear-gradient(180deg, var(--af-bg) 0%, var(--af-bg-2) 100%);
+  color: var(--af-text);
+}
+
+.app-gradient {
+  position: fixed;
+  inset: -120px -100px auto -100px;
+  height: 420px;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(650px 260px at 30% 40%, rgba(109, 94, 252, 0.22), transparent 65%),
+    radial-gradient(520px 220px at 75% 35%, rgba(61, 213, 243, 0.16), transparent 60%);
+  filter: blur(1px);
+}
+
+.app-navbar {
+  background: rgba(10, 14, 30, 0.72) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+.app-navbar .navbar-brand,
+.app-navbar .nav-link {
+  color: rgba(255, 255, 255, 0.86) !important;
+}
+
+.app-navbar .nav-link:hover,
+.app-navbar .nav-link:focus-visible {
+  color: #ffffff !important;
+}
+
+.app-mark {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--af-primary) 0%, var(--af-primary-2) 100%);
+  box-shadow: 0 0 0 6px rgba(109, 94, 252, 0.16);
+}
+
+.app-main a {
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+  text-underline-offset: 0.16em;
+}
+
+.app-main a:hover {
+  color: #ffffff;
+  text-decoration-color: rgba(255, 255, 255, 0.55);
+}
+
+.flash-stack .alert {
+  border-radius: 14px;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.app-footer {
+  border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+/* Bootstrap theme nudges */
+.btn-primary {
+  --bs-btn-bg: var(--af-primary);
+  --bs-btn-border-color: var(--af-primary);
+  --bs-btn-hover-bg: #5a4cf5;
+  --bs-btn-hover-border-color: #5a4cf5;
+  --bs-btn-active-bg: #4f42ee;
+  --bs-btn-active-border-color: #4f42ee;
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: rgba(255, 255, 255, 0.78);
+  --bs-btn-border-color: rgba(255, 255, 255, 0.22);
+  --bs-btn-hover-bg: rgba(255, 255, 255, 0.10);
+  --bs-btn-hover-border-color: rgba(255, 255, 255, 0.26);
+  --bs-btn-hover-color: #ffffff;
+}
+
+.btn-secondary {
+  --bs-btn-bg: rgba(255, 255, 255, 0.14);
+  --bs-btn-border-color: rgba(255, 255, 255, 0.16);
+  --bs-btn-hover-bg: rgba(255, 255, 255, 0.18);
+  --bs-btn-hover-border-color: rgba(255, 255, 255, 0.20);
+  --bs-btn-color: #ffffff;
+}
+
+.form-control,
+.form-select {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.50);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: rgba(109, 94, 252, 0.72);
+  box-shadow: 0 0 0 0.25rem rgba(109, 94, 252, 0.20);
+}
+
+.form-text {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: var(--af-shadow-soft);
+}
+
+.list-group {
+  --bs-list-group-bg: transparent;
+  --bs-list-group-border-color: rgba(255, 255, 255, 0.10);
+  --bs-list-group-color: rgba(255, 255, 255, 0.86);
+}
+
+.list-group-item {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
+}
+
+.badge.text-bg-light.border {
+  background: rgba(255, 255, 255, 0.10) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.62) !important;
+}
+
+/* Page patterns */
+.page-hero {
+  border-radius: var(--af-radius);
+  background: linear-gradient(135deg, rgba(109, 94, 252, 0.16) 0%, rgba(61, 213, 243, 0.10) 60%, rgba(255, 255, 255, 0.04) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: var(--af-shadow);
+  overflow: hidden;
+}
+
+.page-hero-inner {
+  padding: 22px 22px;
+}
+
+@media (min-width: 992px) {
+  .page-hero-inner {
+    padding: 28px 28px;
+  }
+}
+
+.surface-card {
+  border-radius: var(--af-radius);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: var(--af-shadow-soft);
+}
+
+.surface-card-header {
+  padding: 18px 18px 0 18px;
+}
+
+.surface-card-body {
+  padding: 18px;
+}
+
+.surface-card-footer {
+  padding: 0 18px 18px 18px;
+}
+
 /* Auth Pages */
 .auth-container {
   max-width: 500px;
@@ -16,11 +217,11 @@
 }
 
 .auth-card {
-  background: #ffffff;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--af-radius);
   padding: 32px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-  border: 1px solid #f1f1f1;
+  box-shadow: var(--af-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .auth-title {
@@ -94,20 +295,23 @@
 }
 .activity-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 22px;
+  align-items: stretch;
 }
 
 .activity-card {
-  background: white;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--af-radius);
   overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-  transition: transform 0.15s ease;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: var(--af-shadow-soft);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .activity-card:hover {
   transform: translateY(-5px);
+  box-shadow: var(--af-shadow);
 }
 
 .activity-card-img img {
@@ -118,6 +322,10 @@
 
 .activity-card-body {
   padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 100%;
 }
 
 .activity-title {
@@ -127,34 +335,40 @@
 
 .activity-title a {
   text-decoration: none;
-  color: #333;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .activity-meta {
   font-size: 0.9rem;
-  color: #666;
+  color: rgba(255, 255, 255, 0.70);
 }
 
 .activity-category {
   font-size: 0.85rem;
-  color: #999;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (min-width: 1400px) {
+  .activity-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
 }
 
 /* Create Activity Page */
 .drop-zone {
-  border: 2px dashed #cfd6dd;
-  border-radius: 12px;
+  border: 1.5px dashed rgba(255, 255, 255, 0.22);
+  border-radius: var(--af-radius);
   padding: 32px;
   text-align: center;
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.05);
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .drop-zone:hover,
 .drop-zone.drag-over {
-  background: #eef5ff;
-  border-color: #0d6efd;
+  background: rgba(109, 94, 252, 0.14);
+  border-color: rgba(109, 94, 252, 0.65);
 }
 
 .image-preview-list {
@@ -165,12 +379,12 @@
 
 .image-preview-item {
   position: relative;
-  border: 1px solid #dee2e6;
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
   padding: 8px;
-  background: white;
+  background: rgba(255, 255, 255, 0.06);
   cursor: grab;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--af-shadow-soft);
 }
 
 .image-preview-item.dragging {
@@ -192,8 +406,8 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  background: #0d6efd;
-  color: white;
+  background: rgba(109, 94, 252, 0.95);
+  color: #fff;
   font-size: 0.75rem;
   padding: 3px 8px;
   border-radius: 999px;
@@ -202,7 +416,7 @@
 
 .image-name {
   font-size: 0.8rem;
-  color: #555;
+  color: rgba(255, 255, 255, 0.70);
   margin-top: 6px;
   white-space: nowrap;
   overflow: hidden;
@@ -216,10 +430,11 @@
 }
 
 .activity-hero-card {
-  border-radius: 18px;
+  border-radius: 22px;
   overflow: hidden; 
-  background: #f8f9fa;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: var(--af-shadow);
 }
 
 .activity-carousel-image {
@@ -228,7 +443,7 @@
   object-fit: contain;
   object-position: center;
   display: block;
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .activity-detail-content {
@@ -240,27 +455,28 @@
 
 .activity-main-info,
 .activity-info-card {
-  background: white;
-  border: 1px solid #e9ecef;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
   padding: 28px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--af-shadow-soft);
 }
 
 .activity-category-badge {
   display: inline-block;
-  background: #eef5ff;
-  color: #0d6efd;
+  background: rgba(109, 94, 252, 0.16);
+  color: rgba(255, 255, 255, 0.90);
   border-radius: 999px;
   padding: 6px 12px;
   font-size: 0.85rem;
   font-weight: 600;
+  border: 1px solid rgba(109, 94, 252, 0.22);
 }
 
 .activity-detail-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #212529;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .activity-section {
@@ -275,7 +491,7 @@
 }
 
 .activity-section p {
-  color: #495057;
+  color: rgba(255, 255, 255, 0.76);
   line-height: 1.7;
   margin-bottom: 0;
 }
@@ -285,7 +501,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 14px 0;
-  border-top: 1px solid #edf0f2;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 .activity-info-row:first-of-type {
@@ -293,12 +509,12 @@
 }
 
 .activity-info-label {
-  color: #6c757d;
+  color: rgba(255, 255, 255, 0.62);
   font-weight: 600;
 }
 
 .activity-info-value {
-  color: #212529;
+  color: rgba(255, 255, 255, 0.92);
   text-align: right;
   font-weight: 500;
 }
