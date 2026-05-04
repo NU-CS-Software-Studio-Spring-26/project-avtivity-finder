@@ -2,6 +2,8 @@ class User < ApplicationRecord
   has_secure_password
 
   has_many :activities, dependent: :destroy
+  has_many :activity_signups, dependent: :destroy
+  has_many :joined_activities, through: :activity_signups, source: :activity
 
   before_validation :normalize_email
 

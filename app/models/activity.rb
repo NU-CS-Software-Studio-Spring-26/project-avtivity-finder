@@ -1,6 +1,9 @@
 class Activity < ApplicationRecord
   belongs_to :user
 
+  has_many :activity_signups, dependent: :destroy
+  has_many :attendees, through: :activity_signups, source: :user
+
   validates :title, presence: true
   validates :city, presence: true
   validates :category, presence: true

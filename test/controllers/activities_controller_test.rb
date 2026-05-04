@@ -98,4 +98,54 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_match "Not authorized", response.body
   end
+
+  test "can join and leave someone else's activity" do
+    other = User.create!(
+      name: "Joiner",
+      email: "joiner@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+    foreign = Activity.create!(
+      title: "Theirs",
+      city: "NYC",
+      category: "X",
+      event_date: Date.today,
+      user: other
+    )
+
+    joiner = User.create!(
+      name: "Participant",
+      email: "participant@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+
+    post login_path, params: { email: joiner.email, password: "password" }
+
+    assert_difference("ActivitySignup.count", 1) do
+      post join_activity_url(foreign)
+    end
+    assert_redirected_to activity_url(foreign)
+    follow_redirect!
+    assert_match "joined", flash[:notice]
+
+    assert_no_difference("ActivitySignup.count") do
+      post join_activity_url(foreign)
+    end
+
+    assert_difference("ActivitySignup.count", -1) do
+      delete leave_activity_url(foreign)
+    end
+    assert_redirected_to activity_url(foreign)
+  end
+
+  test "host cannot join their own activity" do
+    assert_no_difference("ActivitySignup.count") do
+      post join_activity_url(@activity)
+    end
+    assert_redirected_to activity_url(@activity)
+    follow_redirect!
+    assert_match "hosting", flash[:alert]
+  end
 end

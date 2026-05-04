@@ -2,7 +2,12 @@ Rails.application.routes.draw do
   root "activities#index"
 
   resources :users, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
-  resources :activities
+  resources :activities do
+    member do
+      post :join
+      delete :leave
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

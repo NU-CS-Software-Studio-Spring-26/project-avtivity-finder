@@ -8,12 +8,19 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+ActivitySignup.destroy_all
 Activity.destroy_all
 
 user = User.find_or_create_by!(email: "abc@123.com") do |u|
   u.name = "abc123"
   u.password = "abc123"
   u.password_confirmation = "abc123"
+end
+
+participant = User.find_or_create_by!(email: "joiner@example.com") do |u|
+  u.name = "Joiner User"
+  u.password = "password"
+  u.password_confirmation = "password"
 end
 
 activities = [
@@ -39,5 +46,10 @@ activities = [
   { title: "Writers Coffee Circle", description: "Bring writing projects and meet peers.", location: "Northside Coffee", city: "San Francisco", category: "Coffee Meetup", event_date: Date.today + 21, user: user }
 ]
 
-Activity.create!(activities)
-puts "Seeded #{Activity.count} activities for #{user.email}"
+created = Activity.create!(activities)
+
+created.first(3).each do |activity|
+  ActivitySignup.find_or_create_by!(activity: activity, user: participant)
+end
+
+puts "Seeded #{Activity.count} activities and #{ActivitySignup.count} signups for #{user.email}"
